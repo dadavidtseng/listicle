@@ -1,0 +1,16 @@
+{
+  "name": "minecraft-music-listicle",
+  "version": "1.0.0",
+  "description": "A listicle of Minecraft music discs",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "nodemon": "^2.0.22"
+  }
+}
