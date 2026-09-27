@@ -1,25 +1,42 @@
+/**
+ * ---------------------------------------------------------------------------------------------------
+ * tracks.js
+ * 
+ * @module server.routes
+ * ---------------------------------------------------------------------------------------------------
+ */
+
 import express from 'express'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import trackData from '../data/tracks.js'
+import TracksController from '../controllers/tracks.js'
+import { pool } from '../config/database.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const router = express.Router()
 
-router.get('/', (req, res) => {
-    res.status(200).json(trackData)
-})
+router.get('/', TracksController.getTracks)
+router.get('/search', TracksController.searchTracks)
 
-router.get('/:trackId', (req, res) => {
+router.get('/:trackId', async (req, res) => {
     const id = parseInt(req.params.trackId)
-    const track = trackData.find(t => t.id === id)
 
-    if (track) {
-        res.status(200).sendFile(path.resolve(__dirname, '../public/track.html'))
-    } else {
-        res.status(404).sendFile(path.resolve(__dirname, '../public/404.html'))
+    if (isNaN(id)) {
+        return res.status(404).sendFile(path.resolve(__dirname, '../public/404.html'))
+    }
+
+    try {
+        const result = await pool.query('SELECT id FROM tracks WHERE id = $1', [id])
+
+        if (result.rows.length > 0) {
+            res.status(200).sendFile(path.resolve(__dirname, '../public/track.html'))
+        } else {
+            res.status(404).sendFile(path.resolve(__dirname, '../public/404.html'))
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message })
     }
 })
 

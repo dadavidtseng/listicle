@@ -12,8 +12,8 @@ const renderDetail = async () => {
         document.getElementById('track-artist').textContent = `Artist: ${track.artist}`
         document.getElementById('track-duration').textContent = `Duration: ${track.duration}`
         document.getElementById('track-rarity').innerHTML = `Rarity: <mark>${track.rarity}</mark>`
-        document.getElementById('track-added').textContent = `Added In: ${track.addedIn}`
-        document.getElementById('track-found').textContent = `Found In: ${track.foundIn}`
+        document.getElementById('track-added').textContent = `Added In: ${track.addedin}`
+        document.getElementById('track-found').textContent = `Found In: ${track.foundin}`
         document.getElementById('track-description').textContent = track.description
     } else {
         window.location.href = '/404'
