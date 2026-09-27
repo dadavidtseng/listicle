@@ -1,10 +1,9 @@
-const renderTracks = async () => {
-    const response = await fetch('/tracks')
-    const data = await response.json()
+const renderTracks = (tracks) => {
     const trackList = document.getElementById('track-list')
+    trackList.innerHTML = ''
 
-    if (data && data.length > 0) {
-        data.forEach(track => {
+    if (tracks && tracks.length > 0) {
+        tracks.forEach(track => {
             const card = document.createElement('article')
             card.classList.add('track-card')
 
@@ -40,4 +39,31 @@ const renderTracks = async () => {
     }
 }
 
-renderTracks()
+const fetchTracks = async () => {
+    const response = await fetch('/tracks')
+    const data = await response.json()
+    renderTracks(data)
+}
+
+const searchTracks = async (query) => {
+    const response = await fetch(`/tracks/search?q=${encodeURIComponent(query)}`)
+    const data = await response.json()
+    renderTracks(data)
+}
+
+const searchInput = document.getElementById('search-input')
+
+let debounceTimer
+searchInput.addEventListener('input', (e) => {
+    clearTimeout(debounceTimer)
+    debounceTimer = setTimeout(() => {
+        const query = e.target.value.trim()
+        if (query) {
+            searchTracks(query)
+        } else {
+            fetchTracks()
+        }
+    }, 300)
+})
+
+fetchTracks()
